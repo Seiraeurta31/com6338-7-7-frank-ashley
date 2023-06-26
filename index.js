@@ -1,5 +1,5 @@
 var questionsArr = [
-    {question: "", answer: "", options: ['', '', '', '']},
+    {question: "How many hours in a day?", answer: "24", options: ['10', '6', '18', '24']},
     {question: "", answer: "", options: ['', '', '', '']},
     {question: "", answer: "", options: ['', '', '', '']},
     {question: "", answer: "", options: ['', '', '', '']}
@@ -19,6 +19,15 @@ var startButtonText = document.createTextNode("Start Quiz!")
 var gameContainer = document.createElement("div")
 var question = document.createElement('p')
 var questionText
+var optionB1
+var optionB1Text
+var optionB2
+var optionB2Text
+var optionB3
+var optionB3Text
+var optionB4
+var optionB4Text
+var timer = document.createElement('P')
 
 //initialize game
 gameSetup()
@@ -27,6 +36,7 @@ console.log(game)
 function gameSetup(){
     if(newGame){
         gameContainer.remove() //clears out prior game to show startbutton
+        question.remove()
         var prevScoreText = document.createTextNode(finalScore)
         previousScore.appendChild(prevScoreText)
         game.appendChild(previousScore)  
@@ -39,17 +49,40 @@ function gameSetup(){
     startButton.addEventListener('click', newQuestion)
 }
 
-var timer = document.createElement('P')
 
 function newQuestion(){
     //remove start button and previous score
     startButton.remove()
     previousScore.remove()
 
-    //create gameboard
-    game.appendChild(gameContainer)
-    questionText = document.createTextNode("Start Quiz!")
+    //create prompt
+    questionText = document.createTextNode(questionsArr[questionNum].question)
+    console.log(questionText)
     question.appendChild(questionText)
-    gameContainer.appendChild(question)
-}
+    game.appendChild(question)
 
+     //create gameboard
+     game.appendChild(gameContainer)
+
+    //create option buttons inside a container
+    optionB1 = document.createElement('BUTTON')
+    optionB1Text = document.createTextNode(questionsArr[questionNum].options[0])
+    optionB1.appendChild(optionB1Text)
+    gameContainer.appendChild(optionB1)
+
+    optionB2 = document.createElement('BUTTON')
+    optionB2Text = document.createTextNode(questionsArr[questionNum].options[1])
+    optionB2.appendChild(optionB2Text)
+    gameContainer.appendChild(optionB2)
+
+    optionB3 = document.createElement('BUTTON')
+    optionB3Text = document.createTextNode(questionsArr[questionNum].options[2])
+    optionB3.appendChild(optionB3Text)
+    gameContainer.appendChild(optionB3)
+
+    optionB4 = document.createElement('BUTTON')
+    optionB4Text = document.createTextNode(questionsArr[questionNum].options[3])
+    optionB4.appendChild(optionB4Text)
+    gameContainer.appendChild(optionB4)
+    
+}
