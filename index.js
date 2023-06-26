@@ -1,8 +1,9 @@
 var questionsArr = [
     {question: "How many hours in a day?", answer: "24", options: ['10', '6', '18', '24']},
-    {question: "", answer: "", options: ['', '', '', '']},
-    {question: "", answer: "", options: ['', '', '', '']},
-    {question: "", answer: "", options: ['', '', '', '']}
+    {question: "Which planet is known for its rings?", answer: "Saturn", options: ['Saturn', 'Mars', 'Earth', 'Neptune']},
+    {question: "Which color is 2nd in the rainbow?", answer: "Orange", options: ['Blue', 'Green', 'Orange', 'Purple']},
+    {question: "How many legs does an septopus have?", answer: "7", options: ['5', '6', '7', '8']},
+    {question: 'What is the english translation for the spanish word "verde"', answer: "Green", options: ['polka', 'Green', 'Ball', 'Travel']}
 ]
 
 var game = document.getElementById('quiz')
@@ -55,13 +56,13 @@ function newQuestion(){
     startButton.remove()
     previousScore.remove()
 
-    //create prompt
+    //create question prompt to user
     questionText = document.createTextNode(questionsArr[questionNum].question)
     console.log(questionText)
     question.appendChild(questionText)
     game.appendChild(question)
 
-     //create gameboard
+     //create container for option buttons
      game.appendChild(gameContainer)
 
     //create option buttons inside a container
@@ -69,20 +70,29 @@ function newQuestion(){
     optionB1Text = document.createTextNode(questionsArr[questionNum].options[0])
     optionB1.appendChild(optionB1Text)
     gameContainer.appendChild(optionB1)
+    optionB1.addEventListener('click', validate)
 
     optionB2 = document.createElement('BUTTON')
     optionB2Text = document.createTextNode(questionsArr[questionNum].options[1])
     optionB2.appendChild(optionB2Text)
     gameContainer.appendChild(optionB2)
+    optionB2.addEventListener('click', validate)
 
     optionB3 = document.createElement('BUTTON')
     optionB3Text = document.createTextNode(questionsArr[questionNum].options[2])
     optionB3.appendChild(optionB3Text)
     gameContainer.appendChild(optionB3)
+    optionB3.addEventListener('click', validate)
 
     optionB4 = document.createElement('BUTTON')
     optionB4Text = document.createTextNode(questionsArr[questionNum].options[3])
     optionB4.appendChild(optionB4Text)
     gameContainer.appendChild(optionB4)
+    optionB4.addEventListener('click', validate)
     
+}
+
+function validate(){
+ console.log("Is it correct?")
+ 
 }
