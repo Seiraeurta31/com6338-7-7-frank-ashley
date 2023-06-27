@@ -49,6 +49,7 @@ function gameSetup(){
     startButton.addEventListener('click', newQuestion)
 }
 
+//starts timer
 var startTimer = function(){
     timerId = setInterval(function(){
         timeRemaining --
@@ -60,6 +61,7 @@ var startTimer = function(){
         }, 1000)
 }
 
+//resets timer
 var resetTimer = function(){
     timeRemaining = 30
     clearInterval(timerId)
@@ -67,18 +69,19 @@ var resetTimer = function(){
     //start
 }
 
-//new question
+//Creates new question
 function newQuestion(){
     startTimer()
     console.log("question number " + questionNum)
     console.log("option clicked " + optionClicked)
-    //if first round
+
+    //if first round of game (remove start button and score)
     if(questionNum == 0){
         startButton.remove()
         previousScore.remove()
     }
 
-    //create question prompt to user
+    //create and present question prompt to user
     console.log(questionText)
     question.innerHTML = questionsArr[questionNum].question
     game.appendChild(question)
@@ -87,33 +90,31 @@ function newQuestion(){
     game.appendChild(gameContainer)
 
     
-    //create option buttons inside a container
-    //optionB1 = document.createElement('BUTTON')
+    //create and present option buttons to user
     optionB1.innerHTML = questionsArr[questionNum].options[0]
     gameContainer.appendChild(optionB1)
     optionB1.addEventListener('click', validate, optionClicked = true)
 
-    //optionB2 = document.createElement('BUTTON')
     optionB2.innerHTML = questionsArr[questionNum].options[1]
     gameContainer.appendChild(optionB2)
     optionB2.addEventListener('click', validate, optionClicked = true)
 
-    //optionB3 = document.createElement('BUTTON')
     optionB3.innerHTML = questionsArr[questionNum].options[2]
     gameContainer.appendChild(optionB3)
     optionB3.addEventListener('click', validate, optionClicked = true)
 
-    //optionB4 = document.createElement('BUTTON')
     optionB4.innerHTML = questionsArr[questionNum].options[3]
     gameContainer.appendChild(optionB4)
     optionB4.addEventListener('click', validate, optionClicked = true) 
 
+    //present timer to user
     timeText = document.createTextNode(timeRemaining)
     timer.appendChild(timeText)
     game.appendChild(timer) 
  
 }
 
+//validate selection
 function validate(){
     resetTimer()
     console.log("option clicked " + optionClicked)
