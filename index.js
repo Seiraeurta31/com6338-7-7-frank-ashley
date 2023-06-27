@@ -21,15 +21,15 @@ var startButtonText = document.createTextNode("Start Quiz!")
 var gameContainer = document.createElement("div")
 var question = document.createElement('p')
 var questionText
-var optionB1
-var optionB1Text
-var optionB2
-var optionB2Text
-var optionB3
-var optionB3Text
-var optionB4
-var optionB4Text
-var timer = document.createElement('P')
+var optionB1 = document.createElement('BUTTON')
+var optionB2 = document.createElement('BUTTON')
+var optionB3 = document.createElement('BUTTON')
+var optionB4 = document.createElement('BUTTON')
+var timer = document.createElement('p')
+var timeRemaining = 30
+var timeText 
+var timerId
+
 
 //initialize game
 gameSetup()
@@ -43,67 +43,95 @@ function gameSetup(){
         previousScore.appendChild(prevScoreText)
         game.appendChild(previousScore)  
     }
-    //startButton = document.createElement('BUTTON')
-    //startButtonText = document.createTextNode("Start Quiz!")
     startButton.appendChild(startButtonText)
     startButton.setAttribute('id', 'start-quiz')
     game.appendChild(startButton)  
     startButton.addEventListener('click', newQuestion)
 }
 
+var startTimer = function(){
+    timerId = setInterval(function(){
+        timeRemaining --
+        timer.innerHTML = timeRemaining
+        console.log("counting down ")
+            if(timeRemaining === 0){
+                resetTimer()
+            } 
+        }, 1000)
+}
 
+var resetTimer = function(){
+    timeRemaining = 30
+    clearInterval(timerId)
+    timer.innerHTML = ""
+    //start
+}
+
+//new question
 function newQuestion(){
-    
-
-    //remove start button and previous score
-    startButton.remove()
-    previousScore.remove()
+    startTimer()
+    console.log("question number " + questionNum)
+    console.log("option clicked " + optionClicked)
+    //if first round
+    if(questionNum == 0){
+        startButton.remove()
+        previousScore.remove()
+    }
 
     //create question prompt to user
-    questionText = document.createTextNode(questionsArr[questionNum].question)
     console.log(questionText)
-    question.appendChild(questionText)
+    question.innerHTML = questionsArr[questionNum].question
     game.appendChild(question)
 
-     //create container for option buttons
-     game.appendChild(gameContainer)
+    //create container for option buttons
+    game.appendChild(gameContainer)
 
+    
     //create option buttons inside a container
-    optionB1 = document.createElement('BUTTON')
-    optionB1Text = document.createTextNode(questionsArr[questionNum].options[0])
-    optionB1.appendChild(optionB1Text)
+    //optionB1 = document.createElement('BUTTON')
+    optionB1.innerHTML = questionsArr[questionNum].options[0]
     gameContainer.appendChild(optionB1)
     optionB1.addEventListener('click', validate, optionClicked = true)
 
-    optionB2 = document.createElement('BUTTON')
-    optionB2Text = document.createTextNode(questionsArr[questionNum].options[1])
-    optionB2.appendChild(optionB2Text)
+    //optionB2 = document.createElement('BUTTON')
+    optionB2.innerHTML = questionsArr[questionNum].options[1]
     gameContainer.appendChild(optionB2)
     optionB2.addEventListener('click', validate, optionClicked = true)
 
-    optionB3 = document.createElement('BUTTON')
-    optionB3Text = document.createTextNode(questionsArr[questionNum].options[2])
-    optionB3.appendChild(optionB3Text)
+    //optionB3 = document.createElement('BUTTON')
+    optionB3.innerHTML = questionsArr[questionNum].options[2]
     gameContainer.appendChild(optionB3)
     optionB3.addEventListener('click', validate, optionClicked = true)
 
-    optionB4 = document.createElement('BUTTON')
-    optionB4Text = document.createTextNode(questionsArr[questionNum].options[3])
-    optionB4.appendChild(optionB4Text)
+    //optionB4 = document.createElement('BUTTON')
+    optionB4.innerHTML = questionsArr[questionNum].options[3]
     gameContainer.appendChild(optionB4)
     optionB4.addEventListener('click', validate, optionClicked = true) 
+
+    timeText = document.createTextNode(timeRemaining)
+    timer.appendChild(timeText)
+    game.appendChild(timer) 
+ 
 }
 
 function validate(){
-    console.log(this.innerHTML)
-    console.log (optionClicked)
-    console.log(questionNum)
-    if(optionClicked || timeRemaining > 0){
+    resetTimer()
+    console.log("option clicked " + optionClicked)
+    if(optionClicked && ((questionNum) <= questionsArr.length)){
         if (questionsArr[questionNum].answer == this.innerHTML){
-            console.log("correct!")
-            currentScore++
-            console.log(currentScore)
-            optionClicked = false
-         } 
+            currentScore++  
+            console.log(currentScore)  
+        }    
     }
+    optionClicked = false
+    questionNum++
+    game.replaceChildren()
+
+    newQuestion()
+
+    //if last question
+        //if answered correctly 
+            //increase score
+            //start new game
+    
 }
