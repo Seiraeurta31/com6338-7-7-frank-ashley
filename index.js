@@ -9,6 +9,7 @@ var questionsArr = [
 var game = document.getElementById('quiz')
 var questionsAsked = 0
 var correctAnswers = 0
+var currentScore = 0
 var finalScore = 10
 var playing = false
 var newGame = false
@@ -52,6 +53,8 @@ function gameSetup(){
 
 
 function newQuestion(){
+    
+
     //remove start button and previous score
     startButton.remove()
     previousScore.remove()
@@ -70,29 +73,37 @@ function newQuestion(){
     optionB1Text = document.createTextNode(questionsArr[questionNum].options[0])
     optionB1.appendChild(optionB1Text)
     gameContainer.appendChild(optionB1)
-    optionB1.addEventListener('click', validate)
+    optionB1.addEventListener('click', validate, optionClicked = true)
 
     optionB2 = document.createElement('BUTTON')
     optionB2Text = document.createTextNode(questionsArr[questionNum].options[1])
     optionB2.appendChild(optionB2Text)
     gameContainer.appendChild(optionB2)
-    optionB2.addEventListener('click', validate)
+    optionB2.addEventListener('click', validate, optionClicked = true)
 
     optionB3 = document.createElement('BUTTON')
     optionB3Text = document.createTextNode(questionsArr[questionNum].options[2])
     optionB3.appendChild(optionB3Text)
     gameContainer.appendChild(optionB3)
-    optionB3.addEventListener('click', validate)
+    optionB3.addEventListener('click', validate, optionClicked = true)
 
     optionB4 = document.createElement('BUTTON')
     optionB4Text = document.createTextNode(questionsArr[questionNum].options[3])
     optionB4.appendChild(optionB4Text)
     gameContainer.appendChild(optionB4)
-    optionB4.addEventListener('click', validate)
-    
+    optionB4.addEventListener('click', validate, optionClicked = true) 
 }
 
 function validate(){
- console.log("Is it correct?")
- 
+    console.log(this.innerHTML)
+    console.log (optionClicked)
+    console.log(questionNum)
+    if(optionClicked || timeRemaining > 0){
+        if (questionsArr[questionNum].answer == this.innerHTML){
+            console.log("correct!")
+            currentScore++
+            console.log(currentScore)
+            optionClicked = false
+         } 
+    }
 }
