@@ -11,7 +11,6 @@ var questionsAsked = 0
 var correctAnswers = 0
 var currentScore = 0
 var finalScore = 10
-var playing = false
 var newGame = false
 var questionNum = 0
 var optionClicked = false
@@ -37,10 +36,13 @@ console.log(game)
 
 function gameSetup(){
     if(newGame){
+        console.log("new game triggered")
+        newGame = false
         gameContainer.remove() //clears out prior game to show startbutton
         question.remove()
-        var prevScoreText = document.createTextNode(finalScore)
-        previousScore.appendChild(prevScoreText)
+        previousScore.innerHTML = finalScore
+        //var prevScoreText = document.createTextNode(finalScore)
+       // previousScore.appendChild(prevScoreText)
         game.appendChild(previousScore)  
     }
     startButton.appendChild(startButtonText)
@@ -56,7 +58,19 @@ var startTimer = function(){
         timer.innerHTML = timeRemaining
         console.log("counting down ")
             if(timeRemaining === 0){
-                resetTimer()
+                console.log("question num " + questionNum + "array length = " + questionsArr.length)
+                if((questionNum + 1) < questionsArr.length){
+                    console.log("1 triggered")
+                    questionNum ++
+                    resetTimer()
+                    newQuestion()
+                } 
+                else if((questionNum + 1) == questionsArr.length){
+                    console.log("2 triggered")
+                    newGame = true
+                    gameSetup()
+                }
+                clearInterval(timerId)
             } 
         }, 1000)
 }
@@ -82,7 +96,7 @@ function newQuestion(){
     }
 
     //create and present question prompt to user
-    console.log(questionText)
+    //console.log(questionText)
     question.innerHTML = questionsArr[questionNum].question
     game.appendChild(question)
 
@@ -118,21 +132,22 @@ function newQuestion(){
 function validate(){
     resetTimer()
     console.log("option clicked " + optionClicked)
-    if(optionClicked && ((questionNum) <= questionsArr.length)){
+    if(optionClicked && ((questionNum + 1) < questionsArr.length)){
+        
+        //validate answer
         if (questionsArr[questionNum].answer == this.innerHTML){
             currentScore++  
             console.log(currentScore)  
-        }    
+        }  
+        optionClicked = false
+        questionNum++
+        game.replaceChildren()
+    
+        newQuestion()  
     }
-    optionClicked = false
-    questionNum++
-    game.replaceChildren()
-
-    newQuestion()
-
-    //if last question
-        //if answered correctly 
-            //increase score
-            //start new game
+    else{
+        newGame = true
+        gameSetup()
+    }
     
 }
