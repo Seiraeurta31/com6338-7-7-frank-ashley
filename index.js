@@ -10,13 +10,15 @@ var game = document.getElementById('quiz')
 var questionsAsked = 0
 var correctAnswers = 0
 var currentScore = 0
-var finalScore = 10
+var finalScore = 0
 var newGame = false
 var questionNum = 0
 var optionClicked = false
 var previousScore = document.createElement("p")
 var startButton = document.createElement('BUTTON')
-var startButtonText = document.createTextNode("Start Quiz!")
+startButton.setAttribute('id','start-quiz')
+startButton.innerHTML = "Start Quiz!"
+//var startButtonText = document.createTextNode("Start Quiz!")
 var gameContainer = document.createElement("div")
 var question = document.createElement('p')
 var questionText
@@ -32,21 +34,20 @@ var timerId
 
 //initialize game
 gameSetup()
-console.log(game)
 
 function gameSetup(){
     if(newGame){
         console.log("new game triggered")
         newGame = false
+        currentScore = 0
         gameContainer.remove() //clears out prior game to show startbutton
         question.remove()
-        previousScore.innerHTML = finalScore
-        //var prevScoreText = document.createTextNode(finalScore)
-       // previousScore.appendChild(prevScoreText)
-        game.appendChild(previousScore)  
+        questionNum = 0
+        previousScore.innerHTML = finalScore + "%"
+        game.appendChild(previousScore)    
     }
-    startButton.appendChild(startButtonText)
-    startButton.setAttribute('id', 'start-quiz')
+    //startButton.appendChild(startButtonText)
+    
     game.appendChild(startButton)  
     startButton.addEventListener('click', newQuestion)
 }
@@ -56,7 +57,7 @@ var startTimer = function(){
     timerId = setInterval(function(){
         timeRemaining --
         timer.innerHTML = timeRemaining
-        console.log("counting down ")
+        console.log("Timer is counting down")
             if(timeRemaining === 0){
                 console.log("question num " + questionNum + "array length = " + questionsArr.length)
                 if((questionNum + 1) < questionsArr.length){
@@ -86,8 +87,7 @@ var resetTimer = function(){
 //Creates new question
 function newQuestion(){
     startTimer()
-    console.log("question number " + questionNum)
-    console.log("option clicked " + optionClicked)
+    console.log("Current question number is " + questionNum)
 
     //if first round of game (remove start button and score)
     if(questionNum == 0){
@@ -96,7 +96,6 @@ function newQuestion(){
     }
 
     //create and present question prompt to user
-    //console.log(questionText)
     question.innerHTML = questionsArr[questionNum].question
     game.appendChild(question)
 
@@ -131,13 +130,15 @@ function newQuestion(){
 //validate selection
 function validate(){
     resetTimer()
-    console.log("option clicked " + optionClicked)
+    console.log("option clicked ")
     if(optionClicked && ((questionNum + 1) < questionsArr.length)){
-        
+        console.log ("user selected " + this.innerHTML)
+        console.log ("answer is " + questionsArr[questionNum].answer)
         //validate answer
         if (questionsArr[questionNum].answer == this.innerHTML){
+            console.log("question " + (questionNum +1) + "is true")
             currentScore++  
-            console.log(currentScore)  
+            console.log("current score is " + currentScore)  
         }  
         optionClicked = false
         questionNum++
@@ -146,6 +147,7 @@ function validate(){
         newQuestion()  
     }
     else{
+        finalScore = (currentScore/(questionNum))*100
         newGame = true
         gameSetup()
     }
