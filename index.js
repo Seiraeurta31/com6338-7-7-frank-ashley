@@ -9,10 +9,9 @@ var questionsArr = [
 var game = document.getElementById('quiz')
 var correctAnswers = 0
 var currentScore = 0
-var finalScore = 0
-var prevScoreValue = 0
+var finalScore 
+var prevScoreValue = localStorage.getItem('previous-score')
 var playedBefore = localStorage.getItem('played')
-var storedScore = localStorage.getItem('previous-score')
 var playAgain = false
 var questionNum = 0
 var optionClicked = false
@@ -30,20 +29,24 @@ startGame()
 
 //Sets up new game
 function startGame(){
+    
     if(playAgain){
         timer.remove()
         gameContainer.replaceChildren()
         console.log("new game triggered")
         playAgain = false
+        
         currentScore = 0
         console.log('final score ' + finalScore)
+        //var storedScore = localStorage.getItem('previous-score')
         gameContainer.remove() //clears out prior game to show startbutton
         question.remove()
         questionNum = 0
         localStorage.setItem('previous-score', finalScore)
+        
+        //prevScoreValue = localStorage.getItem('previous-score')
         console.log ("local storage " + prevScoreValue)
-        prevScoreValue = localStorage.getItem('previous-score')
-        previousScore.innerHTML = ('Previous Score: ' + prevScoreValue + '%')
+        previousScore.innerHTML = ('Previous Score: ' + finalScore + '%')
         game.appendChild(previousScore)    
     }
 
@@ -57,6 +60,7 @@ function startGame(){
     game.appendChild(startButton)  
     startButton.addEventListener('click', newQuestion)
     console.log('current score ' + currentScore)
+    
 }
 
 //Create option buttons from question array
@@ -157,9 +161,12 @@ function validate(){
         console.log("total questions " + totalQuestions)
         playedBefore = localStorage.setItem('played', true)
         finalScore = Math.round((currentScore/(totalQuestions))*100)
- 
+        
         console.log(prevScoreValue)
         playAgain = true
+        console.log ("local storage " + prevScoreValue)
+        previousScore.innerHTML = ('Previous Score: ' + finalScore + '%')
+       
         startGame()
     }
     
