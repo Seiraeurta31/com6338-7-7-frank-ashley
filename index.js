@@ -124,7 +124,6 @@ function newQuestion(){
     timeText = document.createTextNode(timeRemaining)
     timer.appendChild(timeText)
     game.appendChild(timer) 
- 
 }
 
 //validate selection
