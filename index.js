@@ -7,52 +7,69 @@ var questionsArr = [
 ]
 
 var game = document.getElementById('quiz')
-var questionsAsked = 0
 var correctAnswers = 0
 var currentScore = 0
 var finalScore = 0
-var newGame = false
+var prevScoreValue = 0
+var playedBefore = localStorage.getItem('played')
+var storedScore = localStorage.getItem('previous-score')
+var playAgain = false
 var questionNum = 0
 var optionClicked = false
 var previousScore = document.createElement("p")
 var startButton = document.createElement('BUTTON')
-startButton.setAttribute('id','start-quiz')
-startButton.innerHTML = "Start Quiz!"
-//var startButtonText = document.createTextNode("Start Quiz!")
 var gameContainer = document.createElement("div")
 var question = document.createElement('p')
-var questionText
-var optionB1 = document.createElement('BUTTON')
-var optionB2 = document.createElement('BUTTON')
-var optionB3 = document.createElement('BUTTON')
-var optionB4 = document.createElement('BUTTON')
+var optionButton
 var timer = document.createElement('p')
-var timeRemaining = 30
-var timeText 
+var timeRemaining = 5
 var timerId
 
-
 //initialize game
-gameSetup()
+startGame()
 
-function gameSetup(){
-    if(newGame){
+//Sets up new game
+function startGame(){
+    if(playAgain){
+        timer.remove()
+        gameContainer.replaceChildren()
         console.log("new game triggered")
-        newGame = false
+        playAgain = false
         currentScore = 0
+        console.log('final score ' + finalScore)
         gameContainer.remove() //clears out prior game to show startbutton
         question.remove()
         questionNum = 0
-        previousScore.innerHTML = finalScore + "%"
+        localStorage.setItem('previous-score', finalScore)
+        console.log ("local storage " + prevScoreValue)
+        prevScoreValue = localStorage.getItem('previous-score')
+        previousScore.innerHTML = ('Previous Score: ' + prevScoreValue + '%')
         game.appendChild(previousScore)    
     }
+
+    if(playedBefore){
+        previousScore.innerHTML = ('Previous Score: ' + prevScoreValue + '%')
+        game.appendChild(previousScore) 
+    }
     //startButton.appendChild(startButtonText)
-    
+    startButton.setAttribute('id','start-quiz')
+    startButton.innerHTML = "Start Quiz!"
     game.appendChild(startButton)  
     startButton.addEventListener('click', newQuestion)
+    console.log('current score ' + currentScore)
 }
 
-//starts timer
+//Create option buttons from question array
+function optionButtons() {
+    for (let i = 0; i < questionsArr[questionNum].options.length; i++) {
+       optionButton = document.createElement('BUTTON')
+       optionButton.innerHTML = questionsArr[questionNum].options[i]
+       optionButton.addEventListener('click', validate, optionClicked = true)
+       gameContainer.appendChild(optionButton)
+    }
+}
+
+//Game timer
 var startTimer = function(){
     timerId = setInterval(function(){
         timeRemaining --
@@ -68,87 +85,81 @@ var startTimer = function(){
                 } 
                 else if((questionNum + 1) == questionsArr.length){
                     console.log("2 triggered")
-                    newGame = true
-                    gameSetup()
+                    playAgain = true
+                    startGame()
                 }
                 clearInterval(timerId)
             } 
         }, 1000)
 }
 
-//resets timer
+//Reset timer (when option is clicked or time runs out/new question)
 var resetTimer = function(){
-    timeRemaining = 30
+    timeRemaining = 5
     clearInterval(timerId)
     timer.innerHTML = ""
-    //start
+
 }
 
-//Creates new question
+//Presents new question/options to user
 function newQuestion(){
     startTimer()
     console.log("Current question number is " + questionNum)
 
-    //if first round of game (remove start button and score)
+    //If first round of game (remove start button and previous score)
     if(questionNum == 0){
         startButton.remove()
         previousScore.remove()
     }
 
-    //create and present question prompt to user
+    //Create and present question prompt to user
     question.innerHTML = questionsArr[questionNum].question
     game.appendChild(question)
 
-    //create container for option buttons
+    //Create container to hold/format option buttons
     game.appendChild(gameContainer)
-
     
-    //create and present option buttons to user
-    optionB1.innerHTML = questionsArr[questionNum].options[0]
-    gameContainer.appendChild(optionB1)
-    optionB1.addEventListener('click', validate, optionClicked = true)
-
-    optionB2.innerHTML = questionsArr[questionNum].options[1]
-    gameContainer.appendChild(optionB2)
-    optionB2.addEventListener('click', validate, optionClicked = true)
-
-    optionB3.innerHTML = questionsArr[questionNum].options[2]
-    gameContainer.appendChild(optionB3)
-    optionB3.addEventListener('click', validate, optionClicked = true)
-
-    optionB4.innerHTML = questionsArr[questionNum].options[3]
-    gameContainer.appendChild(optionB4)
-    optionB4.addEventListener('click', validate, optionClicked = true) 
+    //Create and present option buttons to user
+    optionButtons()
 
     //present timer to user
-    timeText = document.createTextNode(timeRemaining)
-    timer.appendChild(timeText)
+    timer.innerHTML = timeRemaining
     game.appendChild(timer) 
 }
 
-//validate selection
+//Validate option selected by user
 function validate(){
     resetTimer()
     console.log("option clicked ")
     if(optionClicked && ((questionNum + 1) < questionsArr.length)){
-        console.log ("user selected " + this.innerHTML)
-        console.log ("answer is " + questionsArr[questionNum].answer)
+        console.log ("array length " + questionsArr.length )
+        console.log ("quesiton Num " + questionNum)
         //validate answer
         if (questionsArr[questionNum].answer == this.innerHTML){
             console.log("question " + (questionNum +1) + "is true")
             currentScore++  
             console.log("current score is " + currentScore)  
         }  
+        //Increment to next quesiton and reset gameboard with new Q/A
         optionClicked = false
         questionNum++
-        game.replaceChildren()
+        gameContainer.replaceChildren()
+        console.log(game)
     
         newQuestion()  
     }
     else{
-        finalScore = (currentScore/(questionNum))*100
-        newGame = true
-        gameSetup()
+        //Final score calculated and new game is presented to user
+        console.log("current score " + currentScore)
+        console.log("current question " + questionNum)
+        var totalQuestions = questionNum + 1
+        console.log("total questions " + totalQuestions)
+        playedBefore = localStorage.setItem('played', true)
+        finalScore = Math.round((currentScore/(totalQuestions))*100)
+ 
+        console.log(prevScoreValue)
+        playAgain = true
+        startGame()
     }
     
 }
