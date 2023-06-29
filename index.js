@@ -25,7 +25,9 @@ var timeRemaining = 30
 var timerId
 
 //initialize game
+localStorage.setItem('played', false)
 startGame()
+
 
 //Sets up new game
 function startGame(){
