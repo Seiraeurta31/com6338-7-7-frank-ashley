@@ -22,7 +22,7 @@ var gameContainer = document.createElement("div")
 var question = document.createElement('p')
 var optionButton
 var timer = document.createElement('p')
-var timeRemaining = 5
+var timeRemaining = 30
 var timerId
 
 //initialize game
@@ -79,6 +79,7 @@ var startTimer = function(){
                 console.log("question num " + questionNum + "array length = " + questionsArr.length)
                 if((questionNum + 1) < questionsArr.length){
                     console.log("1 triggered")
+                    gameContainer.replaceChildren()
                     questionNum ++
                     resetTimer()
                     newQuestion()
@@ -95,7 +96,7 @@ var startTimer = function(){
 
 //Reset timer (when option is clicked or time runs out/new question)
 var resetTimer = function(){
-    timeRemaining = 5
+    timeRemaining = 30
     clearInterval(timerId)
     timer.innerHTML = ""
 
