@@ -7,7 +7,6 @@ var questionsArr = [
 ]
 
 var game = document.getElementById('quiz')
-var correctAnswers = 0
 var currentScore = 0
 var finalScore = 0
 var prevScoreValue = localStorage.getItem('previous-score')
@@ -25,52 +24,35 @@ var timeRemaining = 30
 var timerId
 
 //initialize game
-
 startGame()
-console.log('if playedBefore ' + playedBefore)
-
 
 //Sets up new game
 function startGame(){
 
-    console.log('playedBefore at start: ' + playedBefore)
-
+    //if played before, show previous score to player
     if(playedBefore){
-        console.log('playedBefore triggered')
         prevScoreValue = localStorage.getItem('previous-score')
         previousScore.innerHTML = ('Previous Score: ' + prevScoreValue + '%')
         game.appendChild(previousScore) 
     }
 
+    //resets game
     if(playAgain){
-        console.log('playedAgain triggered')
-        saveFinalScore()
+        
+        updatePlayerStatus() // saves previous score
         timer.remove()
-        gameContainer.replaceChildren()
-        console.log("new game triggered")
         playAgain = false
-        
         currentScore = 0
-        console.log('final score ' + finalScore)
-        gameContainer.remove() //clears out prior game to show startbutton
+        gameContainer.remove() 
         question.remove()
-        questionNum = 0
-        //localStorage.setItem('previous-score', finalScore)
-        
-        //prevScoreValue = localStorage.getItem('previous-score')
-        // console.log ("local storage " + prevScoreValue)
-        // previousScore.innerHTML = ('Previous Score: ' + prevScoreValue + '%')
-        // game.appendChild(previousScore)    
+        questionNum = 0 
     }
 
-
-    //startButton.appendChild(startButtonText)
+    //Creates start button
     startButton.setAttribute('id','start-quiz')
     startButton.innerHTML = "Start Quiz!"
     game.appendChild(startButton)  
-    startButton.addEventListener('click', newQuestion)
-    console.log('current score ' + currentScore)
-    
+    startButton.addEventListener('click', newQuestion)   
 }
 
 //Create option buttons from question array
@@ -88,24 +70,21 @@ function startTimer(){
     timerId = setInterval(function(){
         timeRemaining --
         timer.innerHTML = timeRemaining
-        console.log("Timer is counting down")
+            //if time runs out 
             if(timeRemaining === 0){
-                console.log("question num " + questionNum + "array length = " + questionsArr.length)
+                resetTimer()
+                //questions remaining
                 if((questionNum + 1) < questionsArr.length){
-                    console.log("1 triggered")
                     gameContainer.replaceChildren()
                     questionNum ++
-                    resetTimer()
                     newQuestion()
                 } 
+                //last question
                 else if((questionNum + 1) == questionsArr.length){
-                    console.log("2 triggered")
                     playAgain = true
-                    clearInterval(timerId)
-                    saveFinalScore()
+                    updatePlayerStatus()
                     startGame() 
-                }
-                //clearInterval(timerId)
+                }   
             } 
         }, 1000)
 }
@@ -115,14 +94,12 @@ function resetTimer(){
     timeRemaining = 30
     clearInterval(timerId)
     timer.innerHTML = ""
-
 }
 
 //Presents new question/options to user
 function newQuestion(){
-    localStorage.setItem('playedBefore', true)
+
     startTimer()
-    console.log("Current question number is " + questionNum)
 
     //If first round of game (remove start button and previous score)
     if(questionNum == 0){
@@ -148,68 +125,33 @@ function newQuestion(){
 //Validate option selected by user
 function validate(){
     resetTimer()
-    console.log("option clicked ")
+    //validate answer and increase score if correct
+    if (questionsArr[questionNum].answer == this.innerHTML){
+        currentScore++  
+    }  
+
+    //if remaining questions present new question
     if((questionNum + 1) < questionsArr.length){
-        console.log ("array length " + questionsArr.length )
-        console.log ("quesiton Num " + questionNum)
-        //validate answer
-        if (questionsArr[questionNum].answer == this.innerHTML){
-            console.log("question " + (questionNum +1) + "is true")
-            currentScore++  
-            console.log("current score is " + currentScore)  
-        }  
-        //Increment to next quesiton and reset gameboard with new Q/A
-        //optionClicked = false
         questionNum++
         gameContainer.replaceChildren()
-        console.log(game)
-    
         newQuestion()  
     }
+    //if last question, update score and reset game
     else if((questionNum +1) == questionsArr.length){
-        console.log ("array length " + questionsArr.length )
-        console.log ("quesiton Num " + questionNum)
-        //validate answer
-        if (questionsArr[questionNum].answer == this.innerHTML){
-            console.log("question " + (questionNum +1) + "is true")
-            currentScore++  
-            console.log("current score is " + currentScore)  
-        }  
-        //Increment to next quesiton and reset gameboard with new Q/A
-        //optionClicked = false
-        gameContainer.replaceChildren()
-        console.log(game)
-
-        //Final score stored and new game is presented to user
-        saveFinalScore()
+        updatePlayerStatus()
         startGame()
     }  
 }
 
 //store 
-function saveFinalScore(){
+function updatePlayerStatus(){
     var totalQuestions = questionsArr.length
     finalScore = Math.round((currentScore/(totalQuestions))*100)
-
-
-    console.log("To be saved before score set " + finalScore)
-
-    var storedScore = localStorage.getItem('previous-score')
-    console.log("local storage score before score set " + storedScore)
-
     localStorage.setItem('previous-score', finalScore)
 
-    var storedScore = localStorage.getItem('previous-score')
-    console.log("local storage after score set " + storedScore)
-
-
-    //playedBefore = localStorage.setItem('playedBefore', true)
-    //console.log(prevScoreValue)
     playAgain = true
-    playedBefore = localStorage.getItem('playedBefore')
-    //console.log ("local storage " + prevScoreValue)
-    previousScore.innerHTML = ('Previous Score: ' + finalScore + '%')
-    console.log("current score " + currentScore)
-    console.log("current question " + questionNum)
-    console.log("total questions " + totalQuestions)
+    //store new value played, and then set to variable for replay
+    localStorage.setItem('playedBefore', true)
+    playedBefore = localStorage.getItem('playedBefore', true)
+
 }
