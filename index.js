@@ -9,7 +9,7 @@ var questionsArr = [
 var game = document.getElementById('quiz')
 var correctAnswers = 0
 var currentScore = 0
-var finalScore 
+var finalScore = 0
 var prevScoreValue = localStorage.getItem('previous-score')
 var playedBefore = localStorage.getItem('played')
 var playAgain = false
@@ -47,7 +47,7 @@ function startGame(){
         localStorage.setItem('previous-score', finalScore)
         
         prevScoreValue = localStorage.getItem('previous-score')
-        console.log ("local storage " + prevScoreValue)
+        console.log ("local storage at replay " + prevScoreValue)
         previousScore.innerHTML = ('Previous Score: ' + (prevScoreValue) + '%')
         game.appendChild(previousScore)    
     }
@@ -165,7 +165,7 @@ function validate(){
         
         console.log(prevScoreValue)
         playAgain = true
-        console.log ("local storage " + prevScoreValue)
+        console.log ("local storage at end " + prevScoreValue)
         previousScore.innerHTML = ('Previous Score: ' + finalScore + '%')
        
         startGame()
