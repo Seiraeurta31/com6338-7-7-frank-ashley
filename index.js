@@ -43,6 +43,7 @@ function startGame(){
         timer.remove()
         playAgain = false
         currentScore = 0
+        gameContainer.replaceChildren()
         gameContainer.remove() 
         question.remove()
         questionNum = 0 
