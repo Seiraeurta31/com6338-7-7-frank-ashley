@@ -101,9 +101,11 @@ function startTimer(){
                 else if((questionNum + 1) == questionsArr.length){
                     console.log("2 triggered")
                     playAgain = true
-                    startGame()
+                    clearInterval(timerId)
+                    saveFinalScore()
+                    startGame() 
                 }
-                clearInterval(timerId)
+                //clearInterval(timerId)
             } 
         }, 1000)
 }
@@ -147,7 +149,7 @@ function newQuestion(){
 function validate(){
     resetTimer()
     console.log("option clicked ")
-    if(optionClicked && ((questionNum + 1) < questionsArr.length)){
+    if((questionNum + 1) < questionsArr.length){
         console.log ("array length " + questionsArr.length )
         console.log ("quesiton Num " + questionNum)
         //validate answer
@@ -157,14 +159,14 @@ function validate(){
             console.log("current score is " + currentScore)  
         }  
         //Increment to next quesiton and reset gameboard with new Q/A
-        optionClicked = false
+        //optionClicked = false
         questionNum++
         gameContainer.replaceChildren()
         console.log(game)
     
         newQuestion()  
     }
-    else if(optionClicked && ((questionNum +1) == questionsArr.length)){
+    else if((questionNum +1) == questionsArr.length){
         console.log ("array length " + questionsArr.length )
         console.log ("quesiton Num " + questionNum)
         //validate answer
@@ -174,7 +176,7 @@ function validate(){
             console.log("current score is " + currentScore)  
         }  
         //Increment to next quesiton and reset gameboard with new Q/A
-        optionClicked = false
+        //optionClicked = false
         gameContainer.replaceChildren()
         console.log(game)
 
