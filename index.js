@@ -46,9 +46,9 @@ function startGame(){
         questionNum = 0
         localStorage.setItem('previous-score', finalScore)
         
-        //prevScoreValue = localStorage.getItem('previous-score')
+        prevScoreValue = localStorage.getItem('previous-score')
         console.log ("local storage " + prevScoreValue)
-        previousScore.innerHTML = ('Previous Score: ' + finalScore + '%')
+        previousScore.innerHTML = ('Previous Score: ' + (prevScoreValue) + '%')
         game.appendChild(previousScore)    
     }
 
@@ -76,7 +76,7 @@ function optionButtons() {
 }
 
 //Game timer
-var startTimer = function(){
+function startTimer(){
     timerId = setInterval(function(){
         timeRemaining --
         timer.innerHTML = timeRemaining
@@ -95,13 +95,12 @@ var startTimer = function(){
                     playAgain = true
                     startGame()
                 }
-                clearInterval(timerId)
             } 
         }, 1000)
 }
 
 //Reset timer (when option is clicked or time runs out/new question)
-var resetTimer = function(){
+function resetTimer(){
     timeRemaining = 30
     clearInterval(timerId)
     timer.innerHTML = ""
