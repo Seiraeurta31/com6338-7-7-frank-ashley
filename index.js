@@ -39,7 +39,7 @@ function startGame(){
     //resets game
     if(playAgain){
         
-        updatePlayerStatus() // saves previous score
+        updatePlayerStatus() // updates score and player status
         timer.remove()
         playAgain = false
         currentScore = 0
