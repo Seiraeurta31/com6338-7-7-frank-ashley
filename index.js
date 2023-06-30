@@ -31,7 +31,7 @@ console.log('if playedBefore ' + playedBefore)
 
 
 //Sets up new game
-function startGame(playedBefore){
+function startGame(){
 
     console.log('playedBefore at start: ' + playedBefore)
 
@@ -180,7 +180,7 @@ function validate(){
 
         //Final score stored and new game is presented to user
         saveFinalScore()
-        startGame(localStorage.getItem('playedBefore'))
+        startGame()
     }  
 }
 
@@ -204,6 +204,7 @@ function saveFinalScore(){
     //playedBefore = localStorage.setItem('playedBefore', true)
     //console.log(prevScoreValue)
     playAgain = true
+    playedBefore = localStorage.getItem('playedBefore')
     //console.log ("local storage " + prevScoreValue)
     previousScore.innerHTML = ('Previous Score: ' + finalScore + '%')
     console.log("current score " + currentScore)
